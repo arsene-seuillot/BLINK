@@ -1,0 +1,6 @@
+fichiers_audio
+.vscode
+.DS_Store
+blink
+blink.o
+effects.o
