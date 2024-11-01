@@ -41,7 +41,7 @@ static int paCallback(const void *inputBuffer, void *outputBuffer,
     } else {
         for (i = 0; i < framesPerBuffer; i++) {
             data->buffer[i] = *rptr++;
-            fprintf(file, "%d\n", data->buffer[i]);
+            fprintf(file, "%f\n", data->buffer[i]);
         }
     }
     
