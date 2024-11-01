@@ -22,6 +22,14 @@ static int paCallback(const void *inputBuffer, void *outputBuffer,
     float *wptr = (float*)outputBuffer;
     unsigned int i;
 
+     // Ouverture du fichier en mode "append" pour ajouter les données à chaque itération
+    const char *output_filename = "output.txt";
+    FILE *file = fopen(output_filename, "a");
+    if (file == NULL) {
+        perror("Erreur lors de l'ouverture du fichier");
+        return 1;
+    }
+
     (void) timeInfo;
     (void) statusFlags;
 
@@ -33,10 +41,12 @@ static int paCallback(const void *inputBuffer, void *outputBuffer,
     } else {
         for (i = 0; i < framesPerBuffer; i++) {
             data->buffer[i] = *rptr++;
+            fprintf(file, "%d\n", data->buffer[i]);
         }
     }
+    
+    /* Apply effects */
 
-    // Apply effects
     applyDistortion(data, framesPerBuffer);
     //applyReverb(data, framesPerBuffer);
     applyLowPassFilter(data, framesPerBuffer);
@@ -94,7 +104,7 @@ void* userCommandThread(void* userData) {
     char command[256];
 
     while (keepRunning) {
-        printf("Enter command (delay on/off, loop record/play/overdub/stop, distortion on/off, reverb on/off, lowpass on/off, quit): ");
+        printf("Enter command (delay on/off, distortion on/off, reverb on/off, lowpass on/off, quit): ");
         if (fgets(command, sizeof(command), stdin) != NULL) {
             if (strncmp(command, "delay on", 8) == 0) {
                 data->delayActive = 1;
@@ -102,6 +112,9 @@ void* userCommandThread(void* userData) {
             } else if (strncmp(command, "delay off", 9) == 0) {
                 data->delayActive = 0;
                 printf("Delay deactivated.\n");
+            
+            /* 
+            On laisse le looper de côté pour l'instant, on se focus sur les effets en temps réel.
             } else if (strncmp(command, "loop record", 11) == 0) {
                 data->loopRecording = 1;
                 data->loopPlaying = 0;
@@ -134,6 +147,7 @@ void* userCommandThread(void* userData) {
                 data->loopRecording = 0;
                 data->loopOverdubbing = 0;
                 printf("Loop stopped.\n");
+            */
             } else if (strncmp(command, "distortion on", 13) == 0) {
                 data->distortionActive = 1;
                 printf("Distortion activated.\n");
@@ -165,6 +179,7 @@ void* userCommandThread(void* userData) {
 }
 
 int main(void) {
+
     PaStreamParameters inputParameters, outputParameters;
     PaStream *stream;
     PaError err;
@@ -175,9 +190,6 @@ int main(void) {
     data.delaySamples = SAMPLE_RATE / 2; // 0.5 seconds delay
     data.delayActive = 0;
     data.lowPassCutoff = 2000.0f; // Default cutoff frequency for low-pass filter
-
-    // Charger une réponse impulsionnelle
-    //loadImpulseResponse(&data.ir, "path/to/your/ir.wav");
 
     err = Pa_Initialize();
     if (err != paNoError) {
@@ -246,7 +258,7 @@ int main(void) {
 
     // Libérer les ressources associées à l'IR
     free(data.ir.irBuffer);
+    
 
     return 0;
 }
-//end
