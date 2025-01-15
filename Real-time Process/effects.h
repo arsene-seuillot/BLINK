@@ -19,6 +19,7 @@ typedef struct {
 // structure qui contient toutes les données à utiliser dans le programme principal
 typedef struct {
     float buffer[FRAMES_PER_BUFFER];
+    float displayBuffer[FRAMES_PER_BUFFER]; // Buffer pour la visualisation
     float delayBuffer[MAX_DELAY_SAMPLES];
     int delayIndex;
     float feedback;
@@ -44,9 +45,13 @@ typedef struct {
 
 
 
+
+
+
 void applyDistortion(paData* data, unsigned long framesPerBuffer);
 void loadImpulseResponse(ImpulseResponse *ir, const char *irFilePath);
 void applyReverb(paData* data, unsigned long framesPerBuffer);
 void applyLowPassFilter(paData* data, unsigned long framesPerBuffer);
+void 
 
 #endif
