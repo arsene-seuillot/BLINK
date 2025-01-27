@@ -1,6 +1,17 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+
+def max(L):
+    max = 0
+    N = len(L)
+    for i in range(N):
+        if np.abs(L[i]) > max:
+            max = L[i]
+    return max
+
+
+
 def calculer_nombre_segments(signal, window_size, hop_size):
     """
     Calcule le nombre de segments nécessaires pour le sonagramme.
