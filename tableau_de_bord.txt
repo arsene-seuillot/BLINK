@@ -9,3 +9,9 @@ La détéction mono-fréquentielle fonctionne.
 J'ai ajouté les fonctions pour extraire le fichier en WAV. ça marchait avant la reconstruction mais pas après, on entend rien dans le signal reconstruit.
 -> En fait j'avais laissé l'amplitude à 1 quand je créais les sinusoides donc on n'entendait rien. j'ai vérifié avec une grande amplitude et ça fonctionne.
 Il faudra que je voit comment faire pour aussi détecter l'amplitude à chaque instant. A voir avec la puissance de l'échantillon peut-être.
+
+
+30/01/2025 :
+Je soupçonne que les sons incohérents venaient du fait que je ne prenais pas en compte la puissance jouée et lors de la reconstruction tout est joué à la même puissance.
+Donc pendant les blancs ou les variations rapides, le bruit prend le dessus et la fréquence détéctée devient aléatoire.
+-> Il faut vraiment trouver un moyen de prendre en compte la puissance jouée.
